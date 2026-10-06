@@ -1,0 +1,6 @@
+{
+  "name": "SSENSE — Palm Angels Flame Sneaker Landing",
+  "description": "Editorial luxury streetwear landing page for Palm Angels Flame Sneakers featuring interactive 3D perspective display, colorway customization, and SSENSE styling.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
