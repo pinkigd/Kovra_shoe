@@ -10,6 +10,7 @@ interface GalleryModalProps {
   colorway: KalliColorway;
   onSelectAngle: (angle: 'side' | 'front' | 'perspective' | 'top' | 'rear' | 'sole') => void;
   isAdminMode?: boolean;
+  onOpenUploadModal?: () => void;
 }
 
 export const GalleryModal: React.FC<GalleryModalProps> = ({
@@ -18,6 +19,7 @@ export const GalleryModal: React.FC<GalleryModalProps> = ({
   colorway,
   onSelectAngle,
   isAdminMode = false,
+  onOpenUploadModal,
 }) => {
   const [images, setImages] = useState<Record<string, string | null>>({
     side: null,
@@ -151,21 +153,26 @@ export const GalleryModal: React.FC<GalleryModalProps> = ({
           </div>
 
           <div className="flex items-center gap-2">
-            {/* Direct Upload button ONLY shown in admin mode */}
-            {isAdminMode && (
-              <button
-                onClick={() => inputRefs.current['side']?.click()}
-                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-neutral-950 hover:bg-neutral-800 text-white text-xs font-semibold shadow-xs transition-all cursor-pointer"
-                title="Upload custom shoe image"
-              >
-                <Upload className="w-3.5 h-3.5 text-amber-400" />
-                <span>Upload Photo</span>
-              </button>
-            )}
+            {/* Direct Upload button */}
+            <button
+              onClick={() => {
+                if (onOpenUploadModal) {
+                  onClose();
+                  onOpenUploadModal();
+                } else {
+                  inputRefs.current['side']?.click();
+                }
+              }}
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-neutral-950 hover:bg-neutral-800 text-white text-xs font-semibold shadow-xs transition-all cursor-pointer"
+              title="Upload custom shoe photos"
+            >
+              <Upload className="w-3.5 h-3.5 text-amber-400" />
+              <span>Upload Photos</span>
+            </button>
 
             <button
               onClick={onClose}
-              className="p-1.5 rounded-full text-neutral-400 hover:text-neutral-900 hover:bg-neutral-100 transition-colors"
+              className="p-1.5 rounded-full text-neutral-400 hover:text-neutral-900 hover:bg-neutral-100 transition-colors cursor-pointer"
               aria-label="Close gallery"
             >
               <X className="w-5 h-5" />
@@ -173,8 +180,8 @@ export const GalleryModal: React.FC<GalleryModalProps> = ({
           </div>
         </div>
 
-        {/* Live Feedback Toast (only if admin is actively updating) */}
-        {isAdminMode && feedbackMsg && (
+        {/* Live Feedback Toast */}
+        {feedbackMsg && (
           <div className="mt-3 p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Check className="w-4 h-4 text-emerald-600" />
@@ -183,9 +190,9 @@ export const GalleryModal: React.FC<GalleryModalProps> = ({
           </div>
         )}
 
-        {/* Info Subtitle: clean customer instructions */}
+        {/* Info Subtitle */}
         <div className="mt-3 text-xs text-neutral-500">
-          Select any angle to view on the main presentation stage:
+          Select any angle to view on the main presentation stage, or click hover to upload photos:
         </div>
 
         {/* Gallery Grid for All 6 Angles */}
@@ -202,8 +209,8 @@ export const GalleryModal: React.FC<GalleryModalProps> = ({
                 }}
                 className="group p-4 bg-neutral-50/70 hover:bg-white rounded-xl border border-neutral-200/70 hover:border-neutral-950 hover:shadow-md cursor-pointer transition-all flex flex-col justify-between"
               >
-                {/* Admin Mode Badge */}
-                {isAdminMode && activeCustomImg && (
+                {/* Upload Status Badge */}
+                {activeCustomImg && (
                   <div className="absolute top-2 left-2 z-10 bg-neutral-900 text-white text-[9px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-xs">
                     <Check className="w-2.5 h-2.5 text-emerald-400" />
                     <span>User Upload</span>
@@ -224,30 +231,30 @@ export const GalleryModal: React.FC<GalleryModalProps> = ({
                     </div>
                   )}
 
-                  {/* Upload Action Overlay: ONLY in Admin Mode */}
-                  {isAdminMode && (
-                    <div className="absolute inset-0 bg-neutral-950/45 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 p-2 backdrop-blur-[2px]">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          inputRefs.current[a.id]?.click();
-                        }}
-                        className="px-3 py-1.5 bg-white text-neutral-900 rounded-lg text-xs font-bold shadow-md hover:bg-neutral-100 flex items-center gap-1.5"
-                      >
-                        <Camera className="w-3.5 h-3.5" />
-                        <span>{activeCustomImg ? 'Change' : 'Upload'}</span>
-                      </button>
+                  {/* Upload Action Overlay on Hover */}
+                  <div className="absolute inset-0 bg-neutral-950/45 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 p-2 backdrop-blur-[2px]">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        inputRefs.current[a.id]?.click();
+                      }}
+                      className="px-3 py-1.5 bg-white text-neutral-900 rounded-lg text-xs font-bold shadow-md hover:bg-neutral-100 flex items-center gap-1.5 cursor-pointer"
+                      title="Upload or change image file for this position"
+                    >
+                      <Camera className="w-3.5 h-3.5" />
+                      <span>{activeCustomImg ? 'Change' : 'Upload'}</span>
+                    </button>
 
-                      {activeCustomImg && (
-                        <button
-                          onClick={(e) => handleClearImage(e, a.id)}
-                          className="p-1.5 bg-red-600 text-white rounded-lg shadow-md hover:bg-red-700"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
-                      )}
-                    </div>
-                  )}
+                    {activeCustomImg && (
+                      <button
+                        onClick={(e) => handleClearImage(e, a.id)}
+                        className="p-1.5 bg-red-600 text-white rounded-lg shadow-md hover:bg-red-700 cursor-pointer"
+                        title="Remove photo"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+                  </div>
                 </div>
 
                 {/* Card Info */}

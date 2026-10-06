@@ -398,21 +398,19 @@ export const AttachedSneakerViewer: React.FC<AttachedSneakerViewerProps> = ({
             />
           )}
 
-          {/* Quick Floating Action to load/swap attached photo (Admin mode only) */}
-          {isAdminMode && (
-            <div className="absolute top-2 right-4 flex items-center gap-2 z-20">
-              <button
-                onClick={() => fileInputRef.current?.click()}
-                className="flex items-center gap-1.5 bg-neutral-900/85 hover:bg-neutral-900 text-white text-[11px] font-semibold px-3 py-1.5 rounded-full backdrop-blur-xs shadow-lg transition-all border border-white/10"
-                title="Upload or change attached image file"
-              >
-                <Upload className="w-3.5 h-3.5" />
-                <span>
-                  {colorwayImages[displayedColorway.id]?.[viewAngle] ? 'Replace Attached File' : 'Attach File'}
-                </span>
-              </button>
-            </div>
-          )}
+          {/* Quick Action to load/swap attached photo on the active angle */}
+          <div className="absolute top-1 right-2 flex items-center gap-2 z-20 opacity-70 hover:opacity-100 transition-opacity">
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="flex items-center gap-1.5 bg-neutral-900/90 hover:bg-neutral-900 text-white text-[11px] font-semibold px-2.5 py-1 rounded-full backdrop-blur-xs shadow-md transition-all border border-white/15 cursor-pointer"
+              title="Upload or change image file for this position"
+            >
+              <Upload className="w-3 h-3 text-amber-400" />
+              <span>
+                {colorwayImages[displayedColorway.id]?.[viewAngle] ? 'Replace Photo' : 'Upload Photo'}
+              </span>
+            </button>
+          </div>
         </div>
       </div>
 

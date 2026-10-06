@@ -17,6 +17,7 @@ import {
   ArrowRight,
   Ruler,
   Upload,
+  Camera,
 } from 'lucide-react';
 import { KALLI_FENDI_SNEAKER } from './data/kalliProduct';
 import { KalliColorway } from './types';
@@ -438,17 +439,15 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Admin Mode only upload button */}
-                {isAdminMode && (
-                  <button
-                    onClick={() => setIsUploadModalOpen(true)}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-neutral-950 hover:bg-neutral-800 text-white text-[11px] font-bold shadow-xs transition-all cursor-pointer border border-neutral-800"
-                    title="Upload custom shoe image (Store Admin)"
-                  >
-                    <Upload className="w-3.5 h-3.5 text-amber-400" />
-                    <span>Admin: Upload Photos</span>
-                  </button>
-                )}
+                {/* Upload Photos Button */}
+                <button
+                  onClick={() => setIsUploadModalOpen(true)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-neutral-950 hover:bg-neutral-800 text-white text-[11px] font-bold shadow-xs transition-all cursor-pointer border border-neutral-800"
+                  title="Upload or change custom shoe photos (Photo Manager)"
+                >
+                  <Upload className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Upload Photos</span>
+                </button>
               </div>
             </div>
 
@@ -746,20 +745,22 @@ export default function App() {
         onClose={() => setIsGalleryOpen(false)}
         colorway={selectedColorway}
         isAdminMode={isAdminMode}
+        onOpenUploadModal={() => setIsUploadModalOpen(true)}
         onSelectAngle={(angle) => {
           const idx = angles.indexOf(angle);
           if (idx !== -1) setCurrentSlideIndex(idx);
         }}
       />
 
-      {/* Subtle store admin trigger - invisible to standard customers unless hovered */}
-      <div className="fixed bottom-2 left-3 z-30 opacity-20 hover:opacity-100 transition-opacity">
+      {/* Floating Photo Manager Trigger Button */}
+      <div className="fixed bottom-3 left-4 z-40">
         <button
           onClick={() => setIsUploadModalOpen(true)}
-          className="text-[10px] text-neutral-400 hover:text-neutral-900 bg-white/80 backdrop-blur-xs px-2.5 py-1 rounded-full border border-neutral-200/80 shadow-2xs transition-colors flex items-center gap-1 cursor-pointer"
-          title="Store Owner: Manage Product Photos"
+          className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-neutral-950/90 hover:bg-neutral-950 text-white text-xs font-semibold shadow-lg backdrop-blur-xs border border-white/10 transition-all cursor-pointer hover:scale-102"
+          title="Open Photo Manager to upload, view, or replace shoe photos"
         >
-          <span>⚙️ Photo Manager</span>
+          <Camera className="w-3.5 h-3.5 text-amber-400" />
+          <span>Upload Shoe Photos</span>
         </button>
       </div>
 
